@@ -15,6 +15,7 @@ const Addscreen = ({navigation}) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState('');
   const [noOfTimeWatch, setNoOfTimeWatch] = useState('');
+  const [isWatched, setIsWatched] = useState(false);
 
   const addToList = async () => {
     if (!name || !noOfTimeWatch) {
@@ -29,6 +30,7 @@ const Addscreen = ({navigation}) => {
       id: shortid.generate(),
       name,
       noOfTimeWatch,
+      isWatched: false,
     };
     const previous_list = JSON.parse(await AsyncStorage.getItem('@season'));
     const new_list = [];
@@ -42,6 +44,7 @@ const Addscreen = ({navigation}) => {
     setId(null);
     setName(null);
     setNoOfTimeWatch(null);
+    setIsWatched(false);
     Snackbar.show({
       text: 'Season added to the list',
       duration: Snackbar.LENGTH_SHORT,

@@ -36,6 +36,18 @@ const Homescreen = ({navigation, route}) => {
     setListOfSeason(deletedList);
   };
 
+  const checkItem = async (id) => {
+    const listOfSeason = JSON.parse(await AsyncStorage.getItem('@season'));
+    const updatedList = listOfSeason.map((season) => {
+      if (season.id === id) {
+        season.isWatched = !season.isWatched;
+      }
+      return season;
+    });
+    await AsyncStorage.setItem('@season', JSON.stringify(updatedList));
+    setListOfSeason(updatedList);
+  };
+
   const Item = ({title}) => {
     console.log(title);
     return (
@@ -47,10 +59,15 @@ const Homescreen = ({navigation, route}) => {
           alignItems: 'center',
           padding: 20,
         }}>
-        <CheckBox />
-        <View>
-          <Text style={{fontSize: 20}}>{title.name}</Text>
-          <Text style={{fontSize: 15}}>10 times watched</Text>
+        <CheckBox
+          checked={title.isWatched}
+          onPress={() => checkItem(title.id)}
+        />
+        <View style={{overflow: 'hidden'}}>
+          <Text style={{fontSize: 20, overflow: 'hidden'}}>{title.name}</Text>
+          <Text style={{fontSize: 15}}>
+            {title.noOfTimeWatch} times watched
+          </Text>
         </View>
         <View
           style={{
@@ -65,7 +82,9 @@ const Homescreen = ({navigation, route}) => {
             }}>
             <Icon name="trash" />
           </Button>
-          <Button style={{margin: 3, backgroundColor: '#218F76'}}>
+          <Button
+            style={{margin: 3, backgroundColor: '#218F76'}}
+            onPress={() => navigation.navigate('Edit', {Season: title})}>
             <Icon name="pencil" />
           </Button>
         </View>
